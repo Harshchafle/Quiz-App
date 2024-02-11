@@ -1,0 +1,93 @@
+#web-icon {
+    height: 200px;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+img {
+    height: 150px;
+    width: 150px;
+    border-radius: 10px;
+}
+
+body {
+    height: 550px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 30px;
+    background: linear-gradient(45deg,#0a0a0a,#151529);
+}
+#name {
+    color: white;
+    text-align: center;
+    font-size: 50px;
+}
+#signuplogin {
+    height: 50px;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    background: transparent;
+    color: white;
+}
+#signup {
+    height: 40px;
+    width: 90px;
+    text-align: center;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1589EE;
+    text-decoration: none;
+    cursor: pointer;
+}
+#login {
+    height: 40px;
+    width: 90px;
+    text-align: center;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1589EE;
+    text-decoration: none;
+    cursor: pointer;
+}
+#another-method {
+    height: 40px;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    color: white;
+}
+#que {
+    height: 40px;
+    width: 250px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    
+}
+#fb {
+    background-color: #1589EE;
+    border-radius: 10px;
+    height: 20px;
+    cursor: pointer;
+}
+#google {
+    background-color: #1589EE;
+    border-radius: 10px;
+    height: 20px;
+    cursor: pointer;
+}

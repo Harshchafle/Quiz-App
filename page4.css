@@ -1,0 +1,40 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background-color: #151529;
+    color: #1589EE;
+}
+#main{
+    font-size: 10vh;
+    padding: 7%;
+    text-align: center;
+}
+.subAll{
+    width: 100%;
+    display: flex;
+}
+a{
+    text-decoration: none;
+}
+button{
+    border: none;
+    font-size: 6vh;
+}
+button:hover{
+    cursor: pointer;
+}
+#sub1, #sub2, #sub3{
+    text-align: center;
+}
+.sub{
+    width: 30%;
+    justify-content: center;
+    align-items: center;
+    height: 25vh;
+    border-radius: 5%;
+    font-size: 6vh;
+    padding: 2%;
+    margin: 0 2% 0 2%;
+    border: 2px solid white;
+}

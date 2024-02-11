@@ -1,0 +1,42 @@
+*{
+    margin: 0;
+    padding: 0;
+    background-color: #151529;
+    color: #1589EE;
+    box-sizing: border-box;
+}
+#topicHead{
+    font-size: 6vh;
+    font-style: bold;
+    padding: 3% 1% 2% 5%;
+}
+.topics{
+    width: 40%;
+    margin: 2% 0% 0% 30%;
+    display: flex;
+    text-align: center;
+    border: 2px solid #ffffff98;
+    border-radius: 1%;
+    flex-direction: column;
+    /* align-items: center; */
+
+}
+a{
+    text-decoration: none;
+}
+.topic1, .topic2, .topic3, .topic4, .topic5{
+    padding: 3% 1% 1% 3%;
+    font-size: 1.5rem;
+    border: 2px solid #ffffff98;
+
+}
+.topic1{
+    border-top: 0;
+}
+.topic1, .topic2, .topic3, .topic4, .topic5{
+    border-bottom: 0;
+}
+.topic1, .topic2, .topic3, .topic4, .topic5{
+    border-right: 0;
+    border-left: 0;
+}

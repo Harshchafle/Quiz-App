@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz World</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #151529;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #quiz-container {
+            background-color: #525297;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .question {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .option {
+            padding: 10px;
+            background-color: #35a772;
+            /* background-color: #4CAF50; */
+            color: white;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, border 0.3s ease;
+        }
+        .option:hover {
+            background-color: #45a049;
+        }
+        .option.selected {
+            border-color: #09375e;
+            border-width: 0.2rem;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 18px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        #progress-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        #progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: lightgray;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #333;
+        }
+        /* .stars {
+            display: none;
+            margin-top: 20px;
+        }
+        .stars img {
+            width: 30px;
+            height: 30px;
+            margin: 0 5px;
+        } */
+       /* .home{
+            text-decoration: none;
+            display: flex;
+            margin: 0px 20px;
+        }*/
+    </style>
+</head>
+<body>
+<!-- <div class="home"><a href="page3.html">Home</a></div> -->
+<div id="quiz-container">
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="button-container">
+        <button onclick="prevQuestion()" class="option">Previous</button>
+        <button onclick="nextQuestion()" class="option">Next</button>
+    </div>
+    <button onclick="submitAnswer()" class="option" id="submitBtn" disabled>Submit Answer</button>
+    <p class="result" id="result"></p>
+    <div id="progress-container">
+        <div id="progress-circle">0%</div>
+    </div>
+    <!-- <div class="stars" id="stars">
+        <img src="star.png" alt="Star">
+        <img src="star.png" alt="Star">
+        <img src="star.png" alt="Star">
+    </div> -->
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "Two satellites A and B move round the earth in the same orbit. The mass of A is twice the mass of B. The quantity which is same for the two satellites will be?",
+            options: ["Speed", "Kinetic Energy", "Total Energy", "Potential Energy"],
+            correctAnswer: "Speed"
+        },
+        {
+            question: "Choose the incorrect statement from the following:",
+            options: ["The speed of satellite in a given circular orbit remains constant", "For a planet revolving around the sun in an elliptical orbit, the total energy of the planet remains constant", "The linear speed of a planet revolving around the sun remains constant", "When a body falls towards earth, the displacement of earth towards the body is negligible"],
+            correctAnswer: "The linear speed of a planet revolving around the sun remains constant"
+        },
+        {
+            question: "Given statements: Statement I : Rotation of the earth shows effect on the value of acceleration due to gravity (g). Statement II : The effect of rotation of the earth on the value of g at the equator is minimum and that at the pole is maximum. In the light of the above statements, choose the correct answer from the options given below",
+            options: ["Statement I is false but statement II is true", "Both Statement I and Statement II are true", "Both Statement I and Statement II are false", "Statement I is true but statement II is false"],
+            correctAnswer: "Statement I is true but statement II is false"
+        },
+        {
+            question: "Given below are two statements: one is labelled as Assertion A and the other is labelled as Reason R. Assertion A: Earth has atmosphere whereas moon doesn’t have any atmosphere. Reason R: The escape velocity on moon is very small as compared to that on earth. In the light of the above statements, choose the correct answer from the options given below:",
+            options: ["Both A and R are correct but R is NOT the correct explanation of A", "A is false but R is true", "Both A and R are correct and R  is the correct explanation of A", "A is true but R is false"],
+            correctAnswer: "Both A and R are correct and R  is the correct explanation of A"   
+        },
+        {
+            question: "Every planet revolves around the sun in an elliptical orbit : A. The force acting on a planet is inversely proportional to square of distance from sun. B. Force acting on planet is inversely proportional to product of the masses of the planet and the sun. C. The centripetal force acting on the planet is directed away from the sun. D. The square of time period of revolution of planet around sun is directly proportional to cube of semi-major axis of elliptical orbit.Choose the correct answer from the options given:",
+            options: ["A and D only", "C and D only", "B and C only", "A and C only"],
+            correctAnswer: "A and D only"
+        }
+        // Add more questions as needed
+    ];
+
+    let currentQuestionIndex = 0;
+    let userScore = 0;
+    let unansweredQuestions = 0;
+
+    function loadQuestion() {
+        const currentQuestion = quizData[currentQuestionIndex];
+        const questionElement = document.getElementById("question");
+        const optionsContainer = document.getElementById("options");
+
+        questionElement.innerHTML = currentQuestion.question;
+        optionsContainer.innerHTML = "";
+
+        currentQuestion.options.forEach((option, index) => {
+            const button = document.createElement("button");
+            button.innerText = option;
+            button.className = "option";
+            button.onclick = () => selectAnswer(index);
+            optionsContainer.appendChild(button);
+        });
+
+        // Adding animated effects
+        setTimeout(() => {
+            questionElement.style.opacity = 1;
+            optionsContainer.style.opacity = 1;
+        }, 100);
+    }
+
+    function selectAnswer(optionIndex) {
+        const selectedOption = quizData[currentQuestionIndex].options[optionIndex];
+        const correctAnswer = quizData[currentQuestionIndex].correctAnswer;
+
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => option.classList.remove('selected'));
+
+        const selectedButton = options[optionIndex];
+        selectedButton.classList.add('selected');
+
+        document.getElementById('submitBtn').disabled = false;
+
+        // const stars = document.getElementById('stars');
+        // if (selectedOption === correctAnswer) {
+            // stars.style.display = 'flex';
+        // } else {
+            // stars.style.display = 'none';
+        // }
+    }
+
+    function submitAnswer() {
+        const selectedOption = document.querySelector('.option.selected');
+        if (selectedOption) {
+            const correctAnswer = quizData[currentQuestionIndex].correctAnswer;
+            // const stars = document.getElementById('stars');
+
+            if (selectedOption.innerText === correctAnswer) {
+                userScore += 4;
+                // stars.style.display = 'flex';
+            } else {
+                userScore -= 1;
+                // stars.style.display = 'none';
+            }
+        }
+
+        unansweredQuestions += 1; // Count unanswered questions
+        nextQuestion();
+    }
+
+    function nextQuestion() {
+        // Adding animated effects
+        const questionElement = document.getElementById("question");
+        const optionsContainer = document.getElementById("options");
+        const resultElement = document.getElementById("result");
+        const buttonContainer = document.querySelector(".button-container");
+        const progressContainer = document.getElementById("progress-container");
+
+        questionElement.style.opacity = 0;
+        optionsContainer.style.opacity = 0;
+        buttonContainer.style.opacity = 0;
+        resultElement.style.opacity = 0;
+        progressContainer.style.opacity = 0;
+
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+            updateProgressCircle();
+
+            // Adding animated effects
+            questionElement.style.opacity = 1;
+            optionsContainer.style.opacity = 1;
+            buttonContainer.style.opacity = 1;
+            progressContainer.style.opacity = 1;
+        }, 500);
+    }
+
+    function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+            // Adding animated effects
+            const questionElement = document.getElementById("question");
+            const optionsContainer = document.getElementById("options");
+            const resultElement = document.getElementById("result");
+            const buttonContainer = document.querySelector(".button-container");
+            const progressContainer = document.getElementById("progress-container");
+
+            questionElement.style.opacity = 0;
+            optionsContainer.style.opacity = 0;
+            buttonContainer.style.opacity = 0;
+            resultElement.style.opacity = 0;
+            progressContainer.style.opacity = 0;
+
+            setTimeout(() => {
+                currentQuestionIndex--;
+                loadQuestion();
+                updateProgressCircle();
+
+                // Adding animated effects
+                questionElement.style.opacity = 1;
+                optionsContainer.style.opacity = 1;
+                buttonContainer.style.opacity = 1;
+                progressContainer.style.opacity = 1;
+            }, 500);
+        }
+    }
+
+    function showResult() {
+        const resultElement = document.getElementById("result");
+        resultElement.innerText = `You scored ${userScore} out of ${quizData.length * 4}!`;
+
+        // Adding animated effects
+        setTimeout(() => {
+            resultElement.style.opacity = 1;
+        }, 100);
+    }
+
+    function updateProgressCircle() {
+        const progress = (currentQuestionIndex / quizData.length) * 100;
+        const progressCircle = document.getElementById("progress-circle");
+        progressCircle.innerText = `${Math.round(progress)}%`;
+        progressCircle.style.backgroundColor = progress < 100 ? "#4CAF50" : "#f44336";
+    }
+
+    // Load the first question on page load
+    loadQuestion();
+    updateProgressCircle();
+</script>
+
+</body>
+</html>
